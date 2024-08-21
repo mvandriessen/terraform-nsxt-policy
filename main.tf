@@ -16,20 +16,20 @@ resource "nsxt_policy_security_policy" "policies" {
   display_name    = each.key
   category        = each.value["category"]
   sequence_number = each.value["sequence_number"]
-  scope           = [for x in each.value["scope"] : try(var.nsxt_policy_grp_grp[x].path, var.nsxt_policy_grp_ext[x].path)]
+  scope           = [for x in each.value["scope"] : try(var.nsxt_policy_grp_grp[x].path)]
 
   dynamic "rule" {
     for_each = each.value["rules"]
 
     content {
       display_name          = rule.value["display"]
-      source_groups         = [for x in rule.value["sources"] : try(var.nsxt_policy_grp_grp[x].path, var.nsxt_policy_grp_ext[x].path)]
+      source_groups         = [for x in rule.value["sources"] : try(var.nsxt_policy_grp_grp[x].path)]
       sources_excluded      = try(rule.value["sources_negate"], false)
-      destination_groups    = [for x in rule.value["destinations"] : try(var.nsxt_policy_grp_grp[x].path, var.nsxt_policy_grp_ext[x].path)]
+      destination_groups    = [for x in rule.value["destinations"] : try(var.nsxt_policy_grp_grp[x].path)]
       destinations_excluded = try(rule.value["destinations_negate"], false)
       action                = rule.value["action"]
       services              = [for x in rule.value["services"] : try(var.nsxt_policy_svc_svc[x].path, var.nsxt_policy_svc_bltin[x].path)]
-      scope                 = [for x in rule.value["scope"] : try(var.nsxt_policy_grp_grp[x].path, var.nsxt_policy_grp_ext[x].path)]
+      scope                 = [for x in rule.value["scope"] : try(var.nsxt_policy_grp_grp[x].path)]
       disabled              = rule.value["disabled"]
       logged                = rule.value["logged"]
       direction             = rule.value["direction"]
